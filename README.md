@@ -1,8 +1,14 @@
-# React + Vite
+# FBI Scoring App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Esta app tiene como objetivo agilizar la puntuacion de torneos de tiro FBI.
 
-Currently, two official plugins are available:
+Para instalar:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1- Clonar Repo
+2- Ejecutar npm install --save
+3- Ejecutar en dev con npm run dev
+
+## v1
+Stand alone scorer
+
+
