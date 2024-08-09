@@ -1,12 +1,11 @@
 import { useState } from 'react';
 
-import { Box, Button, Grid, Tooltip } from '@mui/material';
-import AllOutIcon from '@mui/icons-material/AllOut';
+import { Button, Col, Row, Divider } from 'antd'
+import { FrownFilled } from '@ant-design/icons';
 
 import { ScoreButton } from './';
 
-
-export const Scorer = ({ setRoundScores = () => {} }) => {
+export const Scorer = ({ scores, setRoundScores = () => {} }) => {
 
     const [annotations, setAnnotations] = useState([]);
 
@@ -25,40 +24,31 @@ export const Scorer = ({ setRoundScores = () => {} }) => {
     }
 
     return (
-
-            <Box  gap={4} p={2} display="flex"  
-                sx={{  bgcolor: '#cfe8fc', 
-                        height: '100', 
-                        width:'90%', 
-                        border: '2px solid primary',       
-                        borderRadius: 1, 
-                        mt: 2}}>
-
-                <Grid container spacing={1}>
-                    <Grid item xs={2}>
-                        <ScoreButton value={5} onClick={addScore}/>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <ScoreButton value={4} onClick={addScore}/>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <ScoreButton value={3} onClick={addScore}/>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <ScoreButton value={2} onClick={addScore}/>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <ScoreButton value={0} onClick={addScore}/>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Tooltip title="Sin impactos presentes">
-                            <Button aria-label="no-impact" variant="outlined" onClick={ addNoScores } disabled={ annotations.length === 0 ? false : true }>
-                                <AllOutIcon />
-                            </Button>
-                        </Tooltip>
-                    </Grid>
-                </Grid>
-            </Box>
-        
+        <>
+            <Divider orientation="left">Puntuacion Ronda</Divider>
+            <Row style={{ 'marginTop': '16px', 'marginLeft': '16px'}}>
+            <Col className="gutter-row" span={4}>
+                <ScoreButton value={5} onClick={addScore} disabled={ scores.length === 11 ? true : false }/>
+            </Col>
+            <Col className="gutter-row" span={4}>
+                <ScoreButton value={4} onClick={addScore} disabled={ scores.length === 11 ? true : false }/>
+            </Col>
+            <Col className="gutter-row" span={4}>
+                <ScoreButton value={3} onClick={addScore} disabled={ scores.length === 11 ? true : false }/>
+            </Col>
+            <Col className="gutter-row" span={4}>
+                <ScoreButton value={2} onClick={addScore} disabled={ scores.length === 11 ? true : false }/>
+            </Col>
+            <Col className="gutter-row" span={4}>
+                <ScoreButton value={0} onClick={addScore} disabled={ scores.length === 11 ? true : false }/>
+            </Col>
+            <Col className="gutter-row" span={4}>
+                <Button type="primary" danger shape="circle" onClick={ addNoScores } disabled={ (annotations.length !== 0 ||  scores.length === 11) ? true : false }>
+                    <FrownFilled />
+                </Button>            
+            </Col>
+        </Row> 
+        </>
+       
     )
 }

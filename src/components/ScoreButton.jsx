@@ -1,8 +1,8 @@
-import { Button } from '@mui/material'
+import { Button } from 'antd'
 
-export const ScoreButton = ({ value = 5, onClick }) => {
+export const ScoreButton = ({ value = 5, onClick, disabled = false }) => {
   return (
-    <Button variant="contained" onClick={ () => { onClick(value); } }>
+    <Button type="primary" shape="circle"  onClick={ () => { onClick(value); } } disabled={disabled}>
       {value}
     </Button>
   )

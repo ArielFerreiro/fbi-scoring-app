@@ -1,22 +1,25 @@
-import { Box, Paper, Stack } from "@mui/material"
-import { styled } from '@mui/material/styles';
+import { Badge, Flex } from 'antd'
 
-const DemoPaper = styled(Paper)(({ theme }) => ({
-  width: 120,
-  height: 60,
-  padding: theme.spacing(2),
-  ...theme.typography.body2,
-  textAlign: 'center',
-}));
+import './Totals.css';
 
 export const Totals = ({ impacts, points, isTrial = false }) => {
     
     return (
+      <Flex justify='space-around' align='center'>
 
-            <Stack direction="column" spacing={1} justifyContent="center" alignItems="center">
-                <DemoPaper variant="elevation" sx={{ backgroundColor: isTrial ? "#F1F8E9" : "#fff" }}>Impactos: <b>{impacts}</b></DemoPaper>
-                <DemoPaper variant="elevation" sx={{ backgroundColor: isTrial ? "#F1F8E9" : "#fff" }}> Puntos: <b>{points}</b></DemoPaper>
-            </Stack>
+        <Badge count='Impactos'>
+          <div className='box' style={{'background': isTrial ? '#E0F2F1' : '#EEEEEE'}}> 
+            { impacts }
+          </div>
+        </Badge>
+
+        <Badge count='Puntos' >
+          <div className='box' style={{'background': isTrial ? '#E0F2F1' : '#EEEEEE'}}> 
+            { points }
+          </div>
+        </Badge>
+
+      </Flex>
     )
 }
 

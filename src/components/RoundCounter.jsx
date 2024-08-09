@@ -1,4 +1,7 @@
-import { Box, Typography } from "@mui/material"
+import { Space, Typography } from 'antd'
+
+const { Text } = Typography;
+
 
 export const RoundCounter = ({ scores }) => {
 
@@ -42,11 +45,11 @@ export const RoundCounter = ({ scores }) => {
 
 
     return (
-        <Box sx={{mt: 5}}>
-            <Typography variant="body1" gutterBottom>
+        <Space style={{ 'marginTop': '8px', 'marginLeft': '8px' }}>
+            <Text type="secondary" style={{ margin: 0 }}>
                 {  text  }
-            </Typography>
-        </Box>
+            </Text>
+        </Space>
     )
 }
 

@@ -1,21 +1,52 @@
-import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+
 import { useScore } from '../hooks/useScore';
 import { useEffect, useState } from 'react';
 import { calculatePoints } from '../helpers';
 
+import { Table, Space } from "antd";
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 60 },
-  { field: 'round', headerName: 'Ronda', width: 150, sortable: false},
-  { field: '1D', headerName: '1D', width: 60, sortable: false },
-  { field: '2D', headerName: '2D', width: 60, sortable: false },
-  { field: '3D', headerName: '3D', width: 60, sortable: false },
-  { field: '4D', headerName: '4D', width: 60, sortable: false },
-  { field: '5D', headerName: '5D', width: 60, sortable: false },
-  { field: 'impacts', headerName: 'Impactos', width: 90, sortable: false },
-  { field: 'points', headerName: 'Puntos', width: 90, sortable: false },
-];
+    {
+      title: 'Ronda',
+      dataIndex: 'round',
+      key: 'round',
+    },
+    {
+      title: '1D',
+      dataIndex: '1D',
+      key: '1D',
+    },
+    {
+      title: '2D',
+      dataIndex: '2D',
+      key: '2D',
+    },
+      {
+        title: '3D',
+        dataIndex: '3D',
+        key: '3D',
+      },
+      {
+        title: '4D',
+        dataIndex: '4D',
+        key: '4D',
+      },
+      {
+        title: '5D',
+        dataIndex: '5D',
+        key: '5D',
+      },
+      {
+        title: 'Imp',
+        dataIndex: 'impacts',
+        key: 'impacts',
+      },
+      {
+        title: 'Pts',
+        dataIndex: 'points',
+        key: 'points',
+      },
+  ];
 
 export const ScoreGrid = () => {
 
@@ -44,8 +75,8 @@ export const ScoreGrid = () => {
             }
 
             const newItem = {
-                id: index,
-                round: ronda,
+                'key': index,
+                'round': ronda,
                 '1D': round[0],
                 '2D': round[1],
                 '3D': round[2],
@@ -63,19 +94,8 @@ export const ScoreGrid = () => {
     }, [scores]);
 
     return (
-        <Box sx={{mt: 5, width: '90%'}}>
-        <DataGrid
-            rows={rows}
-            columns={columns}
-            initialState={{
-                columns: {
-                columnVisibilityModel: {
-                    // Hide columns status and traderName, the other columns will remain visible
-                    id: false,
-                },
-                },
-            }}
-        />
-        </Box>
+        <Space style={{ 'marginTop': '8px', 'marginLeft': '8px' }}>
+            <Table dataSource={rows} columns={columns} size="small"  pagination={{ pageSize: 5 }}/>
+        </Space>
     )
 }
