@@ -1,4 +1,4 @@
-import { Col, Row, Divider, FloatButton, Layout, message } from 'antd';
+import { Divider, FloatButton, Layout, message } from 'antd';
 import { RetweetOutlined } from '@ant-design/icons'; 
 
 import { AppMenu, Scorer, RoundCounter, Totals, ScoreGrid } from '../components';
@@ -39,14 +39,7 @@ export const MainPage = () => {
                     <RoundCounter scores={ scores }/>
                     <Scorer scores={ scores } setRoundScores={ (round) => {onAddRound(round);} } />
                     <Divider orientation="left">Totales</Divider>
-                    <Row>
-                        <Col className="gutter-row" span={12}>
-                            <Totals impacts={ impacts } points={ points } />
-                        </Col>
-                        <Col className="gutter-row" span={12}>
-                            <Totals impacts={ testImpacts } points={ testPoints }  isTrial={true} />   
-                        </Col>
-                    </Row>
+                    <Totals impacts={ impacts } points={ points } />
                     <ScoreGrid />
                 </Content>
             </Layout>

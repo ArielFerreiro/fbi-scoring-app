@@ -3,7 +3,7 @@ import { useScore } from '../hooks/useScore';
 import { useEffect, useState } from 'react';
 import { calculatePoints } from '../helpers';
 
-import { Table, Space } from "antd";
+import { Table, Flex } from "antd";
 
 const columns = [
     {
@@ -94,8 +94,8 @@ export const ScoreGrid = () => {
     }, [scores]);
 
     return (
-        <Space style={{ 'marginTop': '8px', 'marginLeft': '8px' }}>
+        <Flex style={{ 'marginTop': '32px' }} justify='center'>
             <Table dataSource={rows} columns={columns} size="small"  pagination={{ pageSize: 5 }}/>
-        </Space>
+        </Flex>
     )
 }

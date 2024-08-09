@@ -38,6 +38,9 @@ export const RoundCounter = ({ scores }) => {
         case 9:
             text = 'Ronda 8';
             break;
+        case 10:
+            text = 'Reintento 1';
+            break;
         default:
             text = 'Terminado, reinicie el contador.'
             break;
