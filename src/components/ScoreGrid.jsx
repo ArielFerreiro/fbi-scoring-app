@@ -95,7 +95,7 @@ export const ScoreGrid = () => {
 
     return (
         <Flex style={{ 'marginTop': '32px' }} justify='center'>
-            <Table dataSource={rows} columns={columns} size="small"  pagination={{ pageSize: 5 }}/>
+            <Table dataSource={rows} columns={columns} size="small"  pagination={{ pageSize: 4 }}/>
         </Flex>
     )
 }

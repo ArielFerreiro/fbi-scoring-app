@@ -90,7 +90,7 @@ export const Scorer = ({ scores, setRoundScores = () => {} }) => {
             </Col>
         </Row> 
         <Flex style={{ 'marginTop': '16px', 'marginRight': '16px'}} justify="end">
-            <Button type="dashed" danger onClick={onDelete}>
+            <Button type="dashed" danger onClick={onDelete} disabled={annotations.length === 0 ? true : false}>
                 Borrar
             </Button>
         </Flex>

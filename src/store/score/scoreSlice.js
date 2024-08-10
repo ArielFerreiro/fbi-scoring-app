@@ -9,6 +9,7 @@ export const scoreSlice = createSlice({
         testPoints: 0,
         impacts: 0,
         points: 0,
+        efficiency: 0,
         scores: []
     },
     reducers: {
@@ -22,7 +23,10 @@ export const scoreSlice = createSlice({
                 state.testPoints = payload.reduce(calculatePoints);
             } else {
                 state.points += payload.reduce(calculatePoints);
-                state.impacts += impactos.length;            
+                state.impacts += impactos.length;   
+                //Efficiency
+                const total = (state.scores.length - 1) * 25;
+                state.efficiency = Math.round(state.points * 100 / total);
             }
 
         },

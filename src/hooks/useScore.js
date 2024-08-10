@@ -3,7 +3,7 @@ import { addScore, reset } from "../store";
 
 export const useScore = () => {
 
-    const { impacts, points, testImpacts, testPoints, scores } = useSelector( state => state.score)
+    const { impacts, points, efficiency, testImpacts, testPoints, scores } = useSelector( state => state.score)
     const dispatch = useDispatch();
 
     const onAddRound = ( score ) => {
@@ -20,6 +20,7 @@ export const useScore = () => {
         //Propiedades
         impacts,
         points,
+        efficiency,
         testImpacts,
         testPoints,
         scores,
