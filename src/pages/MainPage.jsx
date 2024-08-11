@@ -1,4 +1,4 @@
-import { ConfigProvider, Divider, FloatButton, Layout, message, theme } from 'antd';
+import { Col, Row, ConfigProvider, Divider, FloatButton, Layout, message, theme } from 'antd';
 import { RetweetOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons'; 
 
 import { AppMenu, Scorer, RoundCounter, Totals, ScoreGrid } from '../components';
@@ -33,12 +33,24 @@ export const MainPage = () => {
 
             <Layout  style={{ minHeight: '100vh', minWidth: '100vw', margin:"0px", position:'absolute', top:0, left:0}} hasSider={false}>
                 <Content>
-                    <AppMenu />
-                    <RoundCounter scores={ scores }/>
-                    <Scorer scores={ scores } setRoundScores={ (round) => {onAddRound(round);} } />
-                    <Divider orientation="left">Totales</Divider>
-                    <Totals impacts={ impacts } points={ points } efficiency={ efficiency }/>
-                    <ScoreGrid />
+                    <Row justify="center" align="top">
+                        <Col           
+                            xs={{ flex: '100%' }}
+                            sm={{ flex: '80%' }}
+                            md={{ flex: '50%' }}
+                            lg={{ flex: '40%' }}
+                            xl={{ flex: '30%' }}>
+
+
+                                <AppMenu />
+                                <RoundCounter scores={ scores }/>
+                                <Scorer scores={ scores } setRoundScores={ (round) => {onAddRound(round);} } />
+                                <Divider orientation="left">Totales</Divider>
+                                <Totals impacts={ impacts } points={ points } efficiency={ efficiency }/>
+                                <ScoreGrid />
+
+                        </Col>
+                    </Row>
                 </Content>
             </Layout>
             <FloatButton.Group shape="square" style={{ insetInlineEnd: 18 }}>
