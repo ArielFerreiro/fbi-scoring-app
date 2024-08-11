@@ -34,6 +34,7 @@ export const scoreSlice = createSlice({
             state.scores = [];
             state.points = 0;
             state.impacts = 0;
+            state.efficiency = 0;
             state.testImpacts = 0;
             state.testPoints = 0;
         },
