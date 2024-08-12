@@ -56,7 +56,7 @@ export const ScoreGrid = () => {
     useEffect( () => {
 
         let newRows = [];
-
+        console.log(scores);
         scores.map( (round, index) => {
 
             const total = round.reduce(calculatePoints);
