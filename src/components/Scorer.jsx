@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { Button, Col, Row, Divider, Badge, Flex, Select} from 'antd';
 import { AlertOutlined, FrownFilled, ClearOutlined } from '@ant-design/icons';
@@ -11,6 +11,10 @@ export const Scorer = ({ scores, setRoundScores = () => {} }) => {
     const [retry, setRetryRound] = useState(0);
     
     const [counter, setCounter] = useState({cinco: 0, cuatro: 0, tres: 0, dos: 0, cero: 0});
+
+    useEffect( () => {
+        setRetryRound(0);
+    }, [scores]);
 
     let options = scores.map((score, index) => {
         if (score.fail === true) {
@@ -74,7 +78,6 @@ export const Scorer = ({ scores, setRoundScores = () => {} }) => {
         setRoundScores(final, 0, true);
         setAnnotations( (a) => [] );
         setCounter((c) => c = {cinco: 0, cuatro: 0, tres: 0, dos: 0, cero: 0} );
-
     }
 
     const setReRound = (e) => {
@@ -147,7 +150,7 @@ export const Scorer = ({ scores, setRoundScores = () => {} }) => {
                         filterOption={(input, option) =>
                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                         }
-                        disabled={annotations.length === 0 ? true : false}
+                        
                         options={options}
                     />             
                                
