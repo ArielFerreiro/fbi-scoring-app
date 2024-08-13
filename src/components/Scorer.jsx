@@ -1,19 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Button, Col, Row, Divider, Badge, Flex } from 'antd'
-import { FrownFilled } from '@ant-design/icons';
+import { Button, Col, Row, Divider, Badge, Flex, Select} from 'antd';
+import { AlertOutlined, FrownFilled, ClearOutlined } from '@ant-design/icons';
 
 import { ScoreButton } from './';
 
 export const Scorer = ({ scores, setRoundScores = () => {} }) => {
 
     const [annotations, setAnnotations] = useState([]);
+    const [retry, setRetryRound] = useState(0);
+    
     const [counter, setCounter] = useState({cinco: 0, cuatro: 0, tres: 0, dos: 0, cero: 0});
+
+    let options = scores.map((score, index) => {
+        if (score.fail === true) {
+            return {
+                value: index, 
+                label: `Ronda ${index}`
+            }
+        }
+        return;
+    });
+    let retriesFilter = scores.map((score, index) => {
+        if (score.retries !== 0) {
+            return score.retries;
+        }
+        return;
+    });
+    retriesFilter = retriesFilter.filter((f) => f !== undefined);
+    options = options.filter((s) => s !== undefined && !retriesFilter.includes(s.value) );
+
 
     const addScore = (score) => {
         if (annotations.length === 4) {
             const final = [...annotations, score];
-            setRoundScores(final);
+            setRoundScores(final, retry, false);
             setAnnotations( (a) => [] );
             setCounter((c) => c = {cinco: 0, cuatro: 0, tres: 0, dos: 0, cero: 0} );
         } else {
@@ -43,6 +64,21 @@ export const Scorer = ({ scores, setRoundScores = () => {} }) => {
                     break;
             }
         }
+    }
+
+    const addFailure = () => {
+
+        const zerosToComplete = 5 - annotations.length;
+        const arr = new Array(zerosToComplete).fill(0);
+        const final = [...annotations, ...arr];
+        setRoundScores(final, 0, true);
+        setAnnotations( (a) => [] );
+        setCounter((c) => c = {cinco: 0, cuatro: 0, tres: 0, dos: 0, cero: 0} );
+
+    }
+
+    const setReRound = (e) => {
+        setRetryRound( e );
     }
 
     const addNoScores = () => {
@@ -89,8 +125,41 @@ export const Scorer = ({ scores, setRoundScores = () => {} }) => {
                 </Button>            
             </Col>
         </Row> 
-        <Flex style={{ 'marginTop': '16px', 'marginRight': '16px'}} justify="end">
-            <Button type="dashed" danger onClick={onDelete} disabled={annotations.length === 0 ? true : false}>
+        <Flex style={{ 'marginTop': '16px', 'marginRight': '16px'}} justify="space-between">
+            {
+                (scores.length <= 8 || scores.length >=11) ?
+                    <Button 
+                        type="dashed" 
+                        icon={<AlertOutlined />}
+                        style={{marginLeft: '16px'}} 
+                        onClick={addFailure} 
+                        disabled={annotations.length === 0 ? true : false}
+                    >
+                        Fallo Admisible
+                    </Button>      
+                    :
+                    <Select
+                        showSearch
+                        allowClear
+                        onChange={setReRound}
+                        style={{marginLeft: '16px'}} 
+                        placeholder="Elija Ronda"
+                        filterOption={(input, option) =>
+                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                        }
+                        disabled={annotations.length === 0 ? true : false}
+                        options={options}
+                    />             
+                               
+            }
+
+            <Button 
+                type="dashed" 
+                icon={<ClearOutlined  />}
+                danger 
+                style={{marginRight: '16px'}} 
+                onClick={onDelete} 
+                disabled={annotations.length === 0 ? true : false}>
                 Borrar
             </Button>
         </Flex>

@@ -44,7 +44,7 @@ export const MainPage = () => {
 
                                 <AppMenu />
                                 <RoundCounter scores={ scores }/>
-                                <Scorer scores={ scores } setRoundScores={ (round) => {onAddRound(round);} } />
+                                <Scorer scores={ scores } setRoundScores={ (round, retry, fail) => {onAddRound(round, retry, fail);} } />
                                 <Divider orientation="left">Totales</Divider>
                                 <Totals impacts={ impacts } points={ points } efficiency={ efficiency }/>
                                 <ScoreGrid />
@@ -53,7 +53,7 @@ export const MainPage = () => {
                     </Row>
                 </Content>
             </Layout>
-            <FloatButton.Group shape="square" style={{ insetInlineEnd: 18 }}>
+            <FloatButton.Group shape="square" style={{ insetInlineStart: 18 }}>
                 <FloatButton icon={ isDarkTheme ? <SunOutlined/> : <MoonOutlined />}  onClick={onToggleTheme}/>
                 <FloatButton
                     icon={<RetweetOutlined />}

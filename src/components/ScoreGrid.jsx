@@ -3,7 +3,7 @@ import { useScore } from '../hooks/useScore';
 import { useEffect, useState } from 'react';
 import { calculatePoints } from '../helpers';
 
-import { Table, Flex } from "antd";
+import { Table, Flex, Tag } from "antd";
 
 const columns = [
     {
@@ -46,6 +46,19 @@ const columns = [
         dataIndex: 'points',
         key: 'points',
       },
+      {
+        title: 'Fallo',
+        dataIndex: 'fail',
+        key: 'fail',
+        render: (text) => {
+
+          if (text === 'X') {
+            return <Tag color={'volcano'}>X</Tag>;
+          }
+
+        }
+
+      },
   ];
 
 export const ScoreGrid = () => {
@@ -56,11 +69,18 @@ export const ScoreGrid = () => {
     useEffect( () => {
 
         let newRows = [];
-        console.log(scores);
+
         scores.map( (round, index) => {
 
-            const total = round.reduce(calculatePoints);
-            const impactos = round.filter( (e) => e > 0);
+            const roundScores = round.scores;
+            let fail = '';
+            if (round.fail === true) {
+              fail = 'X';
+            }
+            
+
+            const total = roundScores.reduce(calculatePoints);
+            const impactos = roundScores.filter( (e) => e > 0);
 
             let ronda = '';
 
@@ -77,13 +97,14 @@ export const ScoreGrid = () => {
             const newItem = {
                 'key': index,
                 'round': ronda,
-                '1D': round[0],
-                '2D': round[1],
-                '3D': round[2],
-                '4D': round[3],
-                '5D': round[4],
+                '1D': roundScores[0],
+                '2D': roundScores[1],
+                '3D': roundScores[2],
+                '4D': roundScores[3],
+                '5D': roundScores[4],
                 'impacts': impactos.length,
-                'points': total
+                'points': total,
+                'fail': fail
             };
 
             newRows = [...newRows, newItem];

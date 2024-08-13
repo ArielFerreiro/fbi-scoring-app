@@ -6,9 +6,14 @@ export const useScore = () => {
     const { impacts, points, efficiency, testImpacts, testPoints, scores } = useSelector( state => state.score)
     const dispatch = useDispatch();
 
-    const onAddRound = ( score ) => {
+    const onAddRound = ( score, retries = 0,  fail = false ) => {
+        const action = {
+            'scores': score,
+            'retries': retries,
+            'fail': fail
+        }
         if (scores.length < 11) {
-            dispatch(addScore( score ));
+            dispatch(addScore( action ));
         }
     }
 

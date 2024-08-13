@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { calculatePoints } from '../../helpers';
 
+//const scoreModel = {
+//    'scores': [0,0,0,0,0],
+//    'fail': false,
+//    'retries': 1
+//}
 
 export const scoreSlice = createSlice({
     name: 'score',
@@ -15,9 +20,15 @@ export const scoreSlice = createSlice({
     reducers: {
 
         addScore: (state, { payload }) => {
+            console.log('PAYLOAD::', payload);
+            const payloadScores = payload.scores;
+            const payLoadRetries = payload.retries;
+            //console.log('SCORES::', payloadScores);
+            console.log('RETRIES::', payLoadRetries);
+            
             state.scores.push(payload);
-            const impactos = payload.filter( (e) => e > 0).length;
-            const points = payload.reduce(calculatePoints);
+            const impactos = payloadScores.filter( (e) => e > 0).length;
+            const points = payloadScores.reduce(calculatePoints);
 
             if (state.scores.length === 1) {
                 state.testImpacts = impactos;
@@ -29,12 +40,13 @@ export const scoreSlice = createSlice({
                 state.impacts += impactos;   
                 //Efficiency
                 const total = (state.scores.length - 1) * 25;
+                //console.log('TOTAL::', total);
+                //console.log('POINTS::', state.points)
                 state.efficiency = Math.round(state.points * 100 / total);
                 localStorage.setItem('impacts', state.impacts);
                 localStorage.setItem('points', state.points);
                 localStorage.setItem('efficiency', state.efficiency) ;
             }
-            console.log('pushing', state.scores);
             localStorage.setItem('scores', JSON.stringify(state.scores));
 
         },
