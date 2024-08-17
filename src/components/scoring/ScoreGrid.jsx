@@ -1,7 +1,7 @@
 
-import { useScore } from '../hooks/useScore';
+import { useScore } from '../../hooks/useScore';
 import { useEffect, useState } from 'react';
-import { calculatePoints } from '../helpers';
+import { calculatePoints } from '../../helpers';
 
 import { Table, Flex, Tag } from "antd";
 

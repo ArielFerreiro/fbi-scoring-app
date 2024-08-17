@@ -1,9 +1,9 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button, Col, Row, Divider, Badge, Flex, Select} from 'antd';
 import { AlertOutlined, FrownFilled, ClearOutlined } from '@ant-design/icons';
 
-import { ScoreButton } from './';
+import { ScoreButton } from '..';
 
 export const Scorer = ({ scores, setRoundScores = () => {} }) => {
 

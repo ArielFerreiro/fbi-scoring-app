@@ -1,12 +1,18 @@
+import { useDispatch } from 'react-redux';
+
 import { Col, Row, ConfigProvider, Divider, FloatButton, Layout, message, theme } from 'antd';
-import { RetweetOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons'; 
+import { RetweetOutlined, MoonOutlined, LogoutOutlined, SunOutlined } from '@ant-design/icons'; 
 
 import { AppMenu, Scorer, RoundCounter, Totals, ScoreGrid } from '../components';
 import { useScore, useTheme } from '../hooks';
+import { startLogout } from '../store';
+
 
 const { Content } = Layout;
 
 export const MainPage = () => {
+
+    const dispatch = useDispatch();
 
     const {impacts, points, efficiency, scores, onAddRound, onReset} = useScore();
     const { onToggleTheme, isDarkTheme } = useTheme();
@@ -17,6 +23,10 @@ export const MainPage = () => {
         onReset();
     
         messageApi.info('Puntuacion Reiniciada!');
+    }
+
+    const onLogout = () => {
+        dispatch(startLogout());
     }
 
     return (
@@ -54,12 +64,21 @@ export const MainPage = () => {
                 </Content>
             </Layout>
             <FloatButton.Group shape="square" style={{ insetInlineStart: 18 }}>
-                <FloatButton icon={ isDarkTheme ? <SunOutlined/> : <MoonOutlined />}  onClick={onToggleTheme}/>
+                <FloatButton 
+                    icon={ isDarkTheme ? <SunOutlined/> : <MoonOutlined />}  
+                    tooltip='Cambiar Tema'
+                    onClick={onToggleTheme}/>
                 <FloatButton
                     icon={<RetweetOutlined />}
                     badge={{ dot: true }}
+                    tooltip='Reiniciar Puntuacion'
                     onClick={onResetScoreBoard}
                 / >
+                <FloatButton 
+                    icon={ < LogoutOutlined />}  
+                    tooltip='Salir'
+                    type='primary'
+                    onClick={onLogout}/>
             </FloatButton.Group>
         </ConfigProvider>
     )
