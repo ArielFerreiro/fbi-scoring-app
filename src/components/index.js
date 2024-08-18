@@ -7,3 +7,6 @@ export * from './scoring/Totals';
 
 export * from './auth/AuthLayout';
 export * from './auth/CheckingAuth';
+
+export * from './menu/CreateTournament';
+export * from './menu/JoinTournament';

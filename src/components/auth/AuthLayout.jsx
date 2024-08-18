@@ -18,27 +18,27 @@ export const AuthLayout = ({ children, title=''}) => {
           // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
       }}
     >
-      <Layout  style={{ minHeight: '100vh', minWidth: '100vw', margin:"0px", position:'absolute', top:0, left:0}} hasSider={false}>
-          <Content>
-            <Flex gap="middle" 
-                  align="center" 
-                  justify='center'  
-                  vertical
-                  style={{minHeight: '100vh', padding: 4 }}
-            >
-                <Row justify="center" align="start">
-                    <Col           
-                        xs={{ flex: '100%' }}>
+        <Layout  style={{ minHeight: '100vh', minWidth: '100vw', margin:"0px", position:'absolute', top:0, left:0}} hasSider={false}>
+            <Content>
+                <Flex gap="middle" 
+                      align="center" 
+                      justify='center'  
+                      vertical
+                      style={{minHeight: '100vh', padding: 4 }}
+                >
+                    <Row justify="center" align="start">
+                        <Col           
+                            xs={{ flex: '100%' }}>
 
-                        <Title level={5}>{ title }</Title>
-                        { children }
+                            <Title level={5}>{ title }</Title>
+                            { children }
 
-                    </Col>
-                </Row>
-            </Flex>
-          </Content>
-      </Layout>
-
+                        </Col>
+                    </Row>
+                </Flex>
+            </Content>
+        </Layout> 
+    
     </ConfigProvider>
     
   )
