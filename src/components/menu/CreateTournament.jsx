@@ -1,33 +1,57 @@
-import React from 'react'
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Form, Input, InputNumber, DatePicker, Select, Button } from "antd";
+import { Form, Input, InputNumber, DatePicker, Select, Button, message, Row, Col } from "antd";
 
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-import { startCreatingTournament } from '../../store';
+import { clearMessage, startCreatingTournament } from '../../store';
 
 dayjs.extend(customParseFormat);
 const dateFormat = 'YYYY-MM-DD';
 
 export const CreateTournament = () => {
 
+  const [form] = Form.useForm();
+  const values = Form.useWatch([], form);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const [submittable, setSubmittable] = useState(false);
+
   const dispatch = useDispatch()
+  const { isSaving, messageSaved } = useSelector( state => state.tournament);
+
+  useEffect(() => {
+    form
+      .validateFields({
+        validateOnly: true,
+      })
+      .then(() => setSubmittable(true))
+      .catch(() => setSubmittable(false));
+  }, [form, values]);
+
+  useEffect(() => {
+    if (messageSaved != '') {
+        messageApi.info(messageSaved);
+        dispatch(clearMessage());
+    }
+  }, [messageSaved]);
 
   const onFinish = (values) => {
     dispatch(startCreatingTournament(values));
+    form.resetFields();
   };
 
   return (
-    <Form
+    <Form form={form}
         name='new-tournament'
         layout='horizontal'
         initialValues={{remember: false}}
         autoComplete='off'
         onFinish={onFinish}
     >
-      
+        {contextHolder}
         <Form.Item
             label="Nombre del Torneo"
             name="name"
@@ -93,16 +117,26 @@ export const CreateTournament = () => {
             />
         </Form.Item>
 
-              <Form.Item
-                wrapperCol={{
-                  offset: 8,
-                  span: 16,
-                }}
-              >
-                <Button type="primary" htmlType="submit">
-                  Crear Torneo
-                </Button>
-              </Form.Item>
+        <Row justify={'space-evenly'}>
+            <Col>
+                <Form.Item>
+                    <Button 
+                        type="primary" 
+                        htmlType="submit" 
+                        loading={isSaving} 
+                        disabled={!submittable}>
+                        Crear Torneo
+                    </Button>
+                </Form.Item>        
+            </Col>
+            <Col>
+                <Form.Item>
+                    <Button>
+                        Mis Torneos
+                    </Button>
+                </Form.Item>            
+            </Col>
+        </Row>
     </Form>
   )
 }

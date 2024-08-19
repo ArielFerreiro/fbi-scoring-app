@@ -18,6 +18,9 @@ export const tournamentSlice = createSlice({
             state.messageSaved = `${action.payload.name}, creado correctamente`;
             state.isSaving = false;
         },
+        clearMessage: (state) => {
+            state.messageSaved = '';
+        },
         setActive: (state, action ) => {
             state.active = action.payload;
             state.messageSaved = '';
@@ -62,4 +65,5 @@ export const {
     setSaving, 
     updateTournament, 
     clearTournamentsAtLogout, 
+    clearMessage,
     deleteTournamentById } = tournamentSlice.actions;
