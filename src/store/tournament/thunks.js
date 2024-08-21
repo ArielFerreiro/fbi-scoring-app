@@ -1,8 +1,8 @@
 import { doc, collection, setDoc, getDocs, query, where, deleteDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { creatingTournament,  addTournament, setTournaments, deleteTournamentById } from "./tournamentSlice";
+import { creatingTournament,  addTournament, setTournaments, setSaving, deleteTournamentById } from "./tournamentSlice";
 
-export const startCreatingTournament = ({name, numShooters, date, categories}) => {
+export const startCreatingTournament = ({name, numShooters, date, shift, discipline, categories}) => {
 
     return async (dispatch, getState) => {
         
@@ -14,9 +14,11 @@ export const startCreatingTournament = ({name, numShooters, date, categories}) =
         const newTournament = {
             uid: uid,
             name: name,
-            numShooters: numShooters,
-            date: date.$y + '-' + date.$m + '-' + date.$d,
+            lines: numShooters,
+            date: date.format("YYYY-MM-DD"),
+            shift: shift,
             categories: categories,
+            discipline: discipline,
             active: true
         };
 
@@ -33,6 +35,8 @@ export const startCreatingTournament = ({name, numShooters, date, categories}) =
 export const startLoadingTournaments = () => {
 
     return async (dispatch ) => {
+
+        dispatch(setSaving());
 
         const q = query(collection(FirebaseDB, "tournaments"), where("active", "==", true));
         const docs = await getDocs(q);

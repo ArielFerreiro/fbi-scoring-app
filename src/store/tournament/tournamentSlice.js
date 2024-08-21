@@ -26,6 +26,7 @@ export const tournamentSlice = createSlice({
             state.messageSaved = '';
         },
         setTournaments: (state, action ) => {
+            state.isSaving = false;
             state.tournaments = action.payload;
         },
         setSaving: (state ) => {
