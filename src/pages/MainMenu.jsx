@@ -1,12 +1,13 @@
 import React from 'react'
 import { Tabs } from 'antd';
-import { CreateTournament } from '../components';
+//import { CreateTournament } from '../components';
+import { TournamentList } from '../components/';
 
 const items = [
   {
     key: '1',
-    label: 'Crear Torneo',
-    children: < CreateTournament />,
+    label: 'Torneos Activos',
+    children: < TournamentList />,
   },
   {
     key: '2',

@@ -7,12 +7,12 @@ import { Form, Input, InputNumber, DatePicker, Select, Button, message, Row, Col
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-import { clearMessage, startCreatingTournament } from '../../store';
+import { clearMessage, startCreatingTournament } from '../store';
 
 dayjs.extend(customParseFormat);
 const dateFormat = 'YYYY-MM-DD';
 
-export const CreateTournament = () => {
+export const Tournament = () => {
 
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -46,9 +46,9 @@ export const CreateTournament = () => {
     form.resetFields();
   };
 
-  const onTournamentList = () => {
+  const onBack = () => {
 
-    navigate('/tournaments');
+    navigate(-1);
   }
 
   return (
@@ -213,8 +213,8 @@ export const CreateTournament = () => {
                         </Form.Item>        
                     </Col>
                     <Col>
-                        <Button onClick={() => onTournamentList()}>
-                            Mis Torneos
+                        <Button onClick={() => onBack()}>
+                            Volver
                         </Button>
                     </Col>
                 </Row>

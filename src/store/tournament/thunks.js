@@ -54,11 +54,11 @@ export const startLoadingTournaments = () => {
     }
 }
 
-export const startDeletingTournament = () => {
+export const startDeletingTournament = (tournament) => {
 
     return async (dispatch, getState ) => {
 
-        const { active: tournament } = getState().tournament;
+        //const { active: tournament } = getState().tournament;
 
         const docRef = doc( FirebaseDB, `tournaments/${tournament.id}`);
         await deleteDoc(docRef);
