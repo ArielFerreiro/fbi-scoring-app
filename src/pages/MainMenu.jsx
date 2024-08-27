@@ -1,7 +1,12 @@
-import React from 'react'
-import { Tabs } from 'antd';
-//import { CreateTournament } from '../components';
-import { TournamentList } from '../components/';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import { Tabs, FloatButton } from 'antd';
+import { MoonOutlined, LogoutOutlined, SunOutlined, AimOutlined } from '@ant-design/icons'; 
+
+import { PageWrapper, TournamentList } from '../components/';
+import { startLogout } from '../store';
+import { useTheme } from '../hooks';
 
 const items = [
   {
@@ -13,11 +18,42 @@ const items = [
     key: '2',
     label: 'Unirse a Torneo',
     children: 'Content of Tab Pane 2',
-  },
+  }
 ];
 
 export const MainMenu = () => {
+
+  const dispatch = useDispatch();
+  const navigator = useNavigate();
+  
+  const { onToggleTheme, isDarkTheme } = useTheme();
+
+  const onLogout = () => {
+    dispatch(startLogout());
+  }
+
+  const onTraining = () => {
+    navigator('/training');
+  }
+
   return (
-    <Tabs defaultActiveKey="1" items={items} />
+    <PageWrapper>
+      <Tabs defaultActiveKey="1" items={items} style={{padding:'8px'}} />
+      <FloatButton.Group shape="square" style={{ insetInlineEnd: 18 }}>
+      <FloatButton 
+            icon={ < AimOutlined />}  
+            tooltip='Entrenamiento Libre'
+            onClick={onTraining}/>
+        <FloatButton 
+            icon={ isDarkTheme ? <SunOutlined/> : <MoonOutlined />}  
+            tooltip='Cambiar Tema'
+            onClick={onToggleTheme}/>
+        <FloatButton 
+            icon={ < LogoutOutlined />}  
+            tooltip='Salir'
+            type='primary'
+            onClick={onLogout}/>
+      </FloatButton.Group>
+    </PageWrapper>
   )
 }

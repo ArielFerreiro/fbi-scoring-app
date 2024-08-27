@@ -25,6 +25,9 @@ export const tournamentSlice = createSlice({
             state.active = action.payload;
             state.messageSaved = '';
         },
+        clearActive: (state) => {
+            state.active = null;
+        },
         setTournaments: (state, action ) => {
             state.isSaving = false;
             state.tournaments = action.payload;
@@ -42,6 +45,11 @@ export const tournamentSlice = createSlice({
                 return tournament;
             });
             state.messageSaved = `${action.payload.name}, actualizado correctamente`;
+        },
+        inactivateTournament: (state, action) => {
+            state.isSaving = false;
+            state.tournaments = state.tournaments.filter( tournament => tournament.id !== action.payload );            
+            state.messageSaved = `Desactivado correctamente!`;
         },
         clearTournamentsAtLogout: (state, action) => {
             state.isSaving = false;
@@ -62,9 +70,11 @@ export const {
     creatingTournament, 
     addTournament, 
     setActive, 
+    clearActive,
     setTournaments, 
     setSaving, 
     updateTournament, 
+    inactivateTournament,
     clearTournamentsAtLogout, 
     clearMessage,
     deleteTournamentById } = tournamentSlice.actions;

@@ -7,7 +7,7 @@ const { Column } = Table;
 
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 
-import { setActive, startDeletingTournament, startLoadingTournaments } from '../../store';
+import { clearActive, setActive, startDeletingTournament, startLoadingTournaments } from '../../store';
 import { CheckingAuth } from '..';
 
 export const TournamentList = () => {
@@ -26,6 +26,11 @@ export const TournamentList = () => {
 
     const onView = (tournament) => {
       dispatch(setActive(tournament));
+      navigator('/tournament');
+    }
+
+    const onCreate = () => {
+      dispatch(clearActive());
       navigator('/tournament');
     }
 
@@ -60,7 +65,7 @@ export const TournamentList = () => {
                       </Space>
                     )}/>
                 </Table>
-                <Button type='primary'>Crear Torneo</Button>
+                <Button type='primary' onClick={ () => {onCreate()}}>Crear Torneo</Button>
           </Flex>
         )
     }

@@ -1,6 +1,6 @@
-import { doc, collection, setDoc, getDocs, query, where, deleteDoc } from "firebase/firestore/lite";
+import { doc, collection, setDoc, getDocs, query, where, deleteDoc, updateDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { creatingTournament,  addTournament, setTournaments, setSaving, deleteTournamentById } from "./tournamentSlice";
+import { creatingTournament,  addTournament, setTournaments, setSaving, deleteTournamentById, inactivateTournament } from "./tournamentSlice";
 
 export const startCreatingTournament = ({name, numShooters, date, shift, discipline, categories}) => {
 
@@ -34,11 +34,14 @@ export const startCreatingTournament = ({name, numShooters, date, shift, discipl
 
 export const startLoadingTournaments = () => {
 
-    return async (dispatch ) => {
+    return async (dispatch, getState ) => {
 
         dispatch(setSaving());
 
-        const q = query(collection(FirebaseDB, "tournaments"), where("active", "==", true));
+        //current user id
+        const { uid } = getState().auth;
+
+        const q = query(collection(FirebaseDB, "tournaments"), where("active", "==", true), where("uid", "==", uid));
         const docs = await getDocs(q);
 
         const tournaments = [];
@@ -54,9 +57,25 @@ export const startLoadingTournaments = () => {
     }
 }
 
+export const startInactivatingTournament = (tournament) => {
+
+    return async (dispatch ) => {
+
+        //const { active: tournament } = getState().tournament;
+
+        const docRef = doc( FirebaseDB, `tournaments/${tournament.id}`);
+        await updateDoc(docRef, {
+            active: false
+        });
+
+        dispatch( inactivateTournament(tournament.id));
+
+    }
+}
+
 export const startDeletingTournament = (tournament) => {
 
-    return async (dispatch, getState ) => {
+    return async (dispatch ) => {
 
         //const { active: tournament } = getState().tournament;
 
