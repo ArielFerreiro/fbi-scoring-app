@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Tabs, FloatButton } from 'antd';
 import { MoonOutlined, LogoutOutlined, SunOutlined, AimOutlined } from '@ant-design/icons'; 
 
-import { PageWrapper, TournamentList } from '../components/';
+import { PageWrapper, TournamentList, JoinTournament } from '../components/';
 import { startLogout } from '../store';
 import { useTheme } from '../hooks';
 
@@ -17,7 +17,7 @@ const items = [
   {
     key: '2',
     label: 'Unirse a Torneo',
-    children: 'Content of Tab Pane 2',
+    children: < JoinTournament />,
   }
 ];
 

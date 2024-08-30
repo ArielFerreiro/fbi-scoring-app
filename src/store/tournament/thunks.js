@@ -2,7 +2,7 @@ import { doc, collection, setDoc, getDocs, query, where, deleteDoc, updateDoc } 
 import { FirebaseDB } from "../../firebase/config";
 import { creatingTournament,  addTournament, setTournaments, setSaving, deleteTournamentById, inactivateTournament } from "./tournamentSlice";
 
-export const startCreatingTournament = ({name, numShooters, date, shift, discipline, categories}) => {
+export const startCreatingTournament = ({name, club, numShooters, date, shift, discipline, categories}) => {
 
     return async (dispatch, getState) => {
         
@@ -14,6 +14,7 @@ export const startCreatingTournament = ({name, numShooters, date, shift, discipl
         const newTournament = {
             uid: uid,
             name: name,
+            club: club,
             lines: numShooters,
             date: date.format("YYYY-MM-DD"),
             shift: shift,
@@ -32,7 +33,7 @@ export const startCreatingTournament = ({name, numShooters, date, shift, discipl
     }
 }
 
-export const startLoadingTournaments = () => {
+export const startLoadingTournaments = ({all = false}) => {
 
     return async (dispatch, getState ) => {
 
@@ -41,7 +42,12 @@ export const startLoadingTournaments = () => {
         //current user id
         const { uid } = getState().auth;
 
-        const q = query(collection(FirebaseDB, "tournaments"), where("active", "==", true), where("uid", "==", uid));
+        let q = undefined;
+        if (all) {
+            q = query(collection(FirebaseDB, "tournaments"), where("active", "==", true));
+        } else {
+            q = query(collection(FirebaseDB, "tournaments"), where("active", "==", true), where("uid", "==", uid));
+        }
         const docs = await getDocs(q);
 
         const tournaments = [];

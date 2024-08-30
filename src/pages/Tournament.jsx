@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Form, FloatButton, Input, InputNumber, DatePicker, Select, Button, message, Row, Col } from "antd";
+import { Form, FloatButton, Input, InputNumber, DatePicker, Select, Button, message, Row, Col, Typography } from "antd";
 import { AimOutlined, DisconnectOutlined, LeftOutlined } from '@ant-design/icons'; 
+const { Title } = Typography;
 
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -30,6 +31,7 @@ export const Tournament = () => {
     if (active != undefined) {
         form.setFieldsValue({ 
             name: active.name, 
+            club: active.club,
             numShooters: active.lines, 
             date: dayjs(active.date, dateFormat), 
             shift: active.shift,
@@ -82,6 +84,8 @@ export const Tournament = () => {
                 lg={{ flex: '40%' }}
                 xl={{ flex: '30%' }}>
                 
+                <Title level={4}>Torneo</Title>
+
                 <Form form={form}
                     name='new-tournament'
                     layout='horizontal'
@@ -103,18 +107,47 @@ export const Tournament = () => {
                         <Input placeholder='Ingrese el nombre del torneo'  disabled={(active != undefined)} />
                     </Form.Item>
 
-                    <Form.Item
-                        label="Cantidad de Lineas"
-                        name="numShooters"
-                        rules={[
-                        {
-                            required: true,
-                            message: 'Por favor ingrese un numero!',
-                        },
-                        ]}
-                    >
-                        <InputNumber min={1} max={30} changeOnWheel disabled={(active != undefined)}/>
-                    </Form.Item>
+                    <Row justify={'space-between'}>
+                        <Form.Item
+                            label="Club"
+                            name="club"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Por favor seleccione un club!',
+                            },
+                            ]}
+                        >
+                            <Select
+                                placeholder="Seleccione el club"
+                                allowClear
+                                disabled={(active != undefined)}
+                                options={[
+                                    { value: 'tflp', label: 'TF La-Plata' },
+                                    { value: 'tfba', label: 'TF Buenos Aires' },
+                                    { value: 'atgq', label: 'TF Quilmes' },
+                                    { value: 'tflz', label: 'TF Lomas de Zamora' },
+                                    { value: 'tfbb', label: 'TF Bahia Blanca' },
+                                    { value: 'tfmdq', label: 'TF Mar del Plata' },
+                                    { value: 'tfro', label: 'TF Rosario' },                                  
+                                    { value: 'tfvm', label: 'TF Villa Maria' },
+                                ]}
+
+                                />
+                        </Form.Item>
+                        <Form.Item
+                            label="Cantidad de Lineas"
+                            name="numShooters"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Por favor ingrese un numero!',
+                            },
+                            ]}
+                        >
+                            <InputNumber min={1} max={30} changeOnWheel disabled={(active != undefined)}/>
+                        </Form.Item>
+                    </Row>
 
                     <Row justify={'space-between'}>
                             <Form.Item
@@ -176,55 +209,60 @@ export const Tournament = () => {
                             </Form.Item>            
                     </Row>
 
+                
+                    <Row justify={'space-between'}>
 
-                    <Form.Item
-                        label="Disciplina"
-                        name="discipline"
-                        rules={[
-                        {
-                            required: true,
-                            message: 'Seleccione al menos un tipo de disciplina!',
-                        },
-                        ]}
-                    >
-                        <Select
-                        placeholder="Seleccione las disciplinas"
-                        style={{ width: '100%' }}
-                        mode="multiple"
-                        allowClear
-                        disabled={(active != undefined)}
-                        options={[
-                            { value: 'pistola', label: 'Pistola' },
-                            { value: 'revolver', label: 'Revolver' },
-                            { value: 'mini-rifle', label: 'Mini Rifle' },
-                        ]}
-                        />
-                    </Form.Item>
+                        <Form.Item
+                            label="Disciplina"
+                            name="discipline"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Seleccione al menos un tipo de disciplina!',
+                            },
+                            ]}
+                        >
+                            <Select
+                            placeholder="Seleccione las disciplinas"
+                            style={{ width: '100%' }}
+                            mode="multiple"
+                            allowClear
+                            disabled={(active != undefined)}
+                            options={[
+                                { value: 'pistola', label: 'Pistola' },
+                                { value: 'revolver', label: 'Revolver' },
+                                { value: 'mini-rifle', label: 'Mini Rifle' },
+                            ]}
+                            />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Categorias"
-                        name="categories"
-                        rules={[
-                        {
-                            required: true,
-                            message: 'Seleccione al menos una categoria!',
-                        },
-                        ]}
-                    >
-                        <Select
-                        placeholder="Seleccione las categorias"
-                        style={{ width: '100%' }}
-                        mode="multiple"
-                        disabled={(active != undefined)}
-                        allowClear
-                        options={[
-                            { value: 'veterano', label: 'Veterano' },
-                            { value: 'mayor', label: 'Mayor' },
-                            { value: 'junior', label: 'Junior' },
-                            { value: 'dama', label: 'Dama' },
-                        ]}
-                        />
-                    </Form.Item>
+                        <Form.Item
+                            label="Categorias"
+                            name="categories"
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Seleccione al menos una categoria!',
+                            },
+                            ]}
+                        >
+                            <Select
+                            placeholder="Seleccione las categorias"
+                            style={{ width: '100%' }}
+                            mode="multiple"
+                            disabled={(active != undefined)}
+                            allowClear
+                            options={[
+                                { value: 'veterano', label: 'Veterano' },
+                                { value: 'mayor', label: 'Mayor' },
+                                { value: 'junior', label: 'Junior' },
+                                { value: 'dama', label: 'Dama' },
+                            ]}
+                            />
+                        </Form.Item>
+
+                    </Row>
+
 
                     <Row justify={'center'}>
                         <Col style={{ display: (active != undefined) ? 'none' : null }}>
