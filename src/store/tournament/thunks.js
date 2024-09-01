@@ -33,21 +33,17 @@ export const startCreatingTournament = ({name, club, numShooters, date, shift, d
     }
 }
 
-export const startLoadingTournaments = ({all = false}) => {
+export const startLoadingTournaments = () => {
 
     return async (dispatch, getState ) => {
 
         dispatch(setSaving());
 
         //current user id
-        const { uid } = getState().auth;
+        //const { uid } = getState().auth;
 
-        let q = undefined;
-        if (all) {
-            q = query(collection(FirebaseDB, "tournaments"), where("active", "==", true));
-        } else {
-            q = query(collection(FirebaseDB, "tournaments"), where("active", "==", true), where("uid", "==", uid));
-        }
+        const q = query(collection(FirebaseDB, "tournaments"), where("active", "==", true));
+        
         const docs = await getDocs(q);
 
         const tournaments = [];

@@ -38,7 +38,7 @@ export const MainMenu = () => {
 
   return (
     <PageWrapper>
-      <Tabs defaultActiveKey="1" items={items} style={{padding:'8px'}} />
+      <Tabs defaultActiveKey="1" items={items} style={{padding:'8px', margin: '8px'}} />
       <FloatButton.Group shape="square" style={{ insetInlineEnd: 18 }}>
       <FloatButton 
             icon={ < AimOutlined />}  

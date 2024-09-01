@@ -15,6 +15,7 @@ export const TournamentList = () => {
     const dispatch = useDispatch();
     const navigator = useNavigate();
     const { isSaving, tournaments } = useSelector( state => state.tournament);
+    const { uid } = useSelector( state => state.auth);
 
     useEffect(() => {
         dispatch(startLoadingTournaments());
@@ -34,13 +35,13 @@ export const TournamentList = () => {
       navigator('/tournament');
     }
 
-
-    const data = tournaments.map( t => {
-        return {
+    let data = tournaments.map( t => {
+          return {
             key: t.id,
             ...t
-        }
+          }
     });
+    data = data.filter( t => t.uid === uid );
 
     if (isSaving) {
         return (<CheckingAuth />);
@@ -48,13 +49,13 @@ export const TournamentList = () => {
         return (
           <Flex align="center" justify='center' gap="middle" vertical>
                 <Table 
-                    size='large'
+                    size='small'
                     dataSource={data}
                 >
                   <Column title='Nombre'  dataIndex='name' key='name' width='150' />
                   <Column title='Fecha'  dataIndex='date' key='date'  
                     sorter= {{
-                      compare: (a, b) => a.english - b.english,
+                      compare: (a, b) => a.date < b.date,
                       multiple: 1,
                     }} />
                   <Column title='Acciones' key='actions'       
