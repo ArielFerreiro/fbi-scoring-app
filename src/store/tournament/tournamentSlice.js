@@ -18,6 +18,18 @@ export const tournamentSlice = createSlice({
             state.messageSaved = `${action.payload.name}, creado correctamente`;
             state.isSaving = false;
         },
+        addAppointment: (state, action) => {
+            state.tournaments = state.tournaments.map( tournament => {
+                if (action.tournament === tournament.id ) {
+                    appointments = tournament.appointments ?? [];
+                    appointments.push(payload);
+                    return { ...tournament, appointments: appointments };              
+                }
+                return tournament;
+            });
+            state.messageSaved = 'Anotado en el torneo correctamente!';
+            state.isSaving = false;
+        },
         clearMessage: (state) => {
             state.messageSaved = '';
         },
@@ -69,6 +81,7 @@ export const tournamentSlice = createSlice({
 export const { 
     creatingTournament, 
     addTournament, 
+    addAppointment,
     setActive, 
     clearActive,
     setTournaments, 
