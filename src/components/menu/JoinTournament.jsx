@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Table, Row, Col, Typography, Form, Select, Button } from "antd";
+import { Table, Row, Col, Typography, Form, Select, Button, message } from "antd";
+import { startNewTournamentAppointment, clearMessage } from "../../store";
 const { Column } = Table;
 const { Text } = Typography;
 
@@ -16,8 +17,9 @@ export const JoinTournament = () => {
   const [form] = Form.useForm();
   const values = Form.useWatch([], form);
   const [submittable, setSubmittable] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const { displayName } = useSelector( state => state.auth);
+  const { displayName, uid } = useSelector( state => state.auth);
   const { isSaving, messageSaved, tournaments } = useSelector( state => state.tournament);
 
   const [ selectedTournament, setSelectedTournament] = useState(null);
@@ -28,10 +30,20 @@ export const JoinTournament = () => {
   useEffect(
     () => {
       if (selectedTournament) {
-        setCategories(selectedTournament.categories);
-        setShifts(selectedTournament.shift);
-        setDisciplines(selectedTournament.discipline);
+
+        const result = selectedTournament.appointments.some( app => app.uid === uid );
+
+        if (result) {
+          setCategories([]);
+          setShifts([]);
+          setDisciplines([]);
+        } else {
+          setCategories(selectedTournament.categories);
+          setShifts(selectedTournament.shift);
+          setDisciplines(selectedTournament.discipline);
+        }
         form.resetFields();
+
       }
     }, [selectedTournament]);
 
@@ -44,27 +56,45 @@ export const JoinTournament = () => {
       .catch(() => setSubmittable(false));
   }, [form, values]);
 
+  useEffect(() => {
+    if (messageSaved != '') {
+        messageApi.info(messageSaved);
+        dispatch(clearMessage());
+    }
+  }, [messageSaved]);
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedTournament(selectedRows[0]);
     }
   };
 
-  const data = tournaments.map( t => {
-    return {
-      key: t.id,
-      ...t
+  let data = tournaments.map( t => {
+    const tournamentDate = new Date(t.date);
+    const today = new Date();
+    const alreadyAppointed = t.appointments.some( app => app.uid === uid );
+    const limitReached = t.lines < t.appointments.length;
+
+    if (tournamentDate >= today && !alreadyAppointed && !limitReached) {
+      return {
+        key: t.id,
+        ...t
+      }
     }
   });
+  data = data.filter( d => d !== undefined);
 
   const onFinish = (values) => {
-    console.log(values);
-    //dispatch(startCreatingTournament(values));
+    dispatch(startNewTournamentAppointment( selectedTournament, values ));
+    setCategories([]);
+    setShifts([]);
+    setDisciplines([]);
     form.resetFields();
   };
 
   return (
     <>
+      {contextHolder}
       <Row justify="center" align="top" style={{padding: "8px"}}>
         <Col           
           xs={{ flex: '100%' }}
@@ -121,6 +151,7 @@ export const JoinTournament = () => {
             <Select
                 placeholder="Seleccione su turno"
                 allowClear
+                disabled={selectedTournament==null ? true : false}
                 style={{ width: 'calc(100vw-16px)'}}
                 options={ shifts.map( s => { 
                   return {"label": s, "value": s } 
@@ -141,6 +172,7 @@ export const JoinTournament = () => {
                 <Select
                   placeholder="Seleccione su disciplina"
                   allowClear
+                  disabled={selectedTournament==null ? true : false}
                   style={{ width: 'calc(100vw-16px)'}}
                   options={ disciplines.map( d => { 
                     return {"label": d, "value": d } 
@@ -150,7 +182,7 @@ export const JoinTournament = () => {
 
             <Form.Item
                 label="Categoria"
-                name="categories"
+                name="category"
                 rules={[
                 {
                     required: true,
@@ -161,6 +193,7 @@ export const JoinTournament = () => {
                 <Select
                   placeholder="Seleccione su categoria"
                   allowClear
+                  disabled={selectedTournament==null ? true : false}
                   style={{ width: 'calc(100vw-16px)'}}
                   options={ categories.map( c => { 
                     return {"label": c, "value": c } 

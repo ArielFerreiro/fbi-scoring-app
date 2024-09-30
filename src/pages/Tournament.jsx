@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Form, FloatButton, Input, InputNumber, DatePicker, Select, Button, message, Row, Col, Typography } from "antd";
-import { AimOutlined, DisconnectOutlined, LeftOutlined } from '@ant-design/icons'; 
+import { AimOutlined, DisconnectOutlined, LeftOutlined, TeamOutlined } from '@ant-design/icons'; 
 const { Title } = Typography;
 
 import dayjs from 'dayjs';
@@ -23,12 +23,14 @@ export const Tournament = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [submittable, setSubmittable] = useState(false);
+  const [participants, setParticipants] = useState(0);
 
   const dispatch = useDispatch()
   const { isSaving, messageSaved, active } = useSelector( state => state.tournament);
 
   useEffect(() => {
     if (active != undefined) {
+        setParticipants(active.appointments.length);
         form.setFieldsValue({ 
             name: active.name, 
             club: active.club,
@@ -38,6 +40,8 @@ export const Tournament = () => {
             discipline: active.discipline,
             categories: active.categories
          });
+    } else {
+        setParticipants(0);
     }
   }, [active]);
 
@@ -68,6 +72,10 @@ export const Tournament = () => {
     form.resetFields();
   }
 
+  const onLineAssignment = () => {
+    navigate('/lineassignment');
+  }
+
   const onBack = () => {
     dispatch(clearActive());
     navigate(-1);
@@ -85,6 +93,7 @@ export const Tournament = () => {
                 xl={{ flex: '30%' }}>
                 
                 <Title level={4}>Torneo</Title>
+                <Title level={5}>Inscriptos: { participants }</Title>
 
                 <Form form={form}
                     name='new-tournament'
@@ -282,6 +291,11 @@ export const Tournament = () => {
         </Row>
         
         <FloatButton.Group shape="square" style={{ insetInlineEnd: 18 }}>
+            <FloatButton 
+                icon={ < TeamOutlined />}  
+                tooltip='Asignar Lineas'
+                onClick={onLineAssignment}
+            />
             <FloatButton 
                 icon={ < AimOutlined />}  
                 tooltip='Iniciar Torneo'

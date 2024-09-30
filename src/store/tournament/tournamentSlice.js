@@ -7,7 +7,6 @@ export const tournamentSlice = createSlice({
         messageSaved: '',
         active: null,     //selected one
         tournaments: [], //only active ones
-
     },
     reducers: {
         creatingTournament: (state) => {
@@ -18,16 +17,27 @@ export const tournamentSlice = createSlice({
             state.messageSaved = `${action.payload.name}, creado correctamente`;
             state.isSaving = false;
         },
-        addAppointment: (state, action) => {
-            state.tournaments = state.tournaments.map( tournament => {
-                if (action.tournament === tournament.id ) {
-                    appointments = tournament.appointments ?? [];
+        addAppointment: (state, { payload }) => {
+            state.tournaments = state.tournaments.map( t => {
+                if (payload.tournament === t.id ) {
+                    const appointments = t.appointments ?? [];
                     appointments.push(payload);
-                    return { ...tournament, appointments: appointments };              
+                    return { ...t, appointments: appointments };              
                 }
-                return tournament;
+                return t;
             });
             state.messageSaved = 'Anotado en el torneo correctamente!';
+            state.isSaving = false;
+        },
+        refreshAppointments: (state, { payload }) => {
+            state.tournaments = state.tournaments.map( t => {
+                if (payload[0].tournament === t.id ) {
+                    return { ...t, assignedlines: payload };              
+                }
+                return t;
+            });
+            state.active.assignedlines = payload;
+            state.messageSaved = 'Lineas asignadas correctamente!';
             state.isSaving = false;
         },
         clearMessage: (state) => {
@@ -63,7 +73,7 @@ export const tournamentSlice = createSlice({
             state.tournaments = state.tournaments.filter( tournament => tournament.id !== action.payload );            
             state.messageSaved = `Desactivado correctamente!`;
         },
-        clearTournamentsAtLogout: (state, action) => {
+        clearTournamentsAtLogout: (state) => {
             state.isSaving = false;
             state.messageSaved = '';
             state.tournaments = [];
@@ -82,6 +92,7 @@ export const {
     creatingTournament, 
     addTournament, 
     addAppointment,
+    refreshAppointments,
     setActive, 
     clearActive,
     setTournaments, 

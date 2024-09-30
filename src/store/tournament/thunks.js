@@ -1,6 +1,6 @@
 import { doc, collection, setDoc, getDocs, query, where, deleteDoc, updateDoc, writeBatch } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { creatingTournament,  addTournament, setTournaments, setSaving, deleteTournamentById, inactivateTournament, addAppointment } from "./tournamentSlice";
+import { creatingTournament,  addTournament, addAppointment, setTournaments, setSaving, deleteTournamentById, inactivateTournament, refreshAppointments } from "./tournamentSlice";
 
 export const startCreatingTournament = ({name, club, numShooters, date, shift, discipline, categories}) => {
 
@@ -27,6 +27,7 @@ export const startCreatingTournament = ({name, club, numShooters, date, shift, d
         await setDoc( newDoc, newTournament );
         newTournament.id = newDoc.id;
         newTournament.appointments = [];
+        newTournament.assignedlines = [];
 
         //dispatch
         dispatch ( addTournament( newTournament ) );
@@ -34,9 +35,88 @@ export const startCreatingTournament = ({name, club, numShooters, date, shift, d
     }
 }
 
-export const startLoadingTournaments = () => {
+
+export const startNewTournamentAppointment = ( tournament, values ) => {
 
     return async (dispatch, getState ) => {
+
+        dispatch(creatingTournament());
+
+        const { uid, email, displayName } = getState().auth;
+
+        const newAppointment = {
+            uid: uid,
+            email: email,
+            name: displayName,
+            tournament: tournament.id,
+            shift: values.shift,
+            category: values.category,
+            discipline: values.discipline, 
+            line: 0
+        };
+
+        const newDoc = doc( collection(FirebaseDB, 'appointments' ) )
+        await setDoc( newDoc, newAppointment );
+        newAppointment.id = newDoc.id;
+
+        //dispatch
+        dispatch ( addAppointment( newAppointment ) );
+
+    }
+}
+
+export const startLinesAssignment = ( tournament, lines  ) => {
+
+    return async (dispatch) => {
+
+        dispatch(creatingTournament());
+
+        let newAppointments = [];
+
+        //First deletes all lines assigments done previously
+        const batch = writeBatch(FirebaseDB);
+        const q = query(collection(FirebaseDB, "lines"), where("tournament", "==", tournament.id));
+        const lineDocs = await getDocs(q);
+        lineDocs.forEach((doc) => {
+            batch.delete(doc.ref);
+        });
+
+        //Then adds new assignments
+        for (let i=0; i < tournament.shift.length; i++) {
+            //Check appointments per shift
+            const shift = tournament.shift[i];
+            let line = 0;
+
+            for (let j=0; j < tournament.appointments.length; j++) {
+
+                const appointment = tournament.appointments[j];
+
+                if (appointment.shift === shift) {
+                    const newAppointment = {...appointment, line: (lines[line]+1)};
+
+                    const newDoc = doc( collection(FirebaseDB, 'lines' ) )
+                    //await setDoc( newDoc, appointment );
+                    batch.set(newDoc, newAppointment);
+                    
+                    newAppointments.push(newAppointment);
+                    line++;
+                }
+            }
+        }
+
+        await batch.commit();
+
+        //dispatch
+        dispatch ( refreshAppointments( newAppointments ) );
+
+    }
+
+}
+
+
+export const startLoadingTournaments = () => {
+
+    return async (dispatch ) => {
 
         dispatch(setSaving());
 
@@ -61,17 +141,24 @@ export const startLoadingTournaments = () => {
             const appsDocs = await getDocs(appQuery);
             const appointments = [];
             appsDocs.forEach( (appDoc) => {
-                appointments.push(appDoc.data);
+                appointments.push(appDoc.data());
+            });
+
+            const linesQuery = query(collection(FirebaseDB, "lines"), where("tournament", "==", tournament.id));
+            const linesDocs = await getDocs(linesQuery);
+            const assignedlines = [];
+            linesDocs.forEach( (lineDoc) => {
+                assignedlines.push(lineDoc.data());
             });
             
             return {
                 appointments: appointments,
+                assignedlines: assignedlines,
                 ...tournament
             }
 
         }));
-        //TODO: VER SI ESTO FUNCIONO!
-
+        
         dispatch(setTournaments( tournaments ));
 
     }
@@ -104,41 +191,21 @@ export const startDeletingTournament = (tournament) => {
         
         const batch = writeBatch(FirebaseDB);
 
-        //TODO CHEQUEAR QUE ESTO FUNCIONE
-        const snapshot = collection(FirebaseDB, "appointments").where("tournament", "==", tournament.id).get();
-        snapshot.forEach((doc) => {
-           batch.delete(doc.docRef);
+        const appQuery = query(collection(FirebaseDB, "appointments"), where("tournament", "==", tournament.id));
+        const appsDocs = await getDocs(appQuery);
+        appsDocs.forEach((doc) => {
+           batch.delete(doc.ref);
         });
+
+        const linesQuery = query(collection(FirebaseDB, "lines"), where("tournament", "==", tournament.id));
+        const linesDocs = await getDocs(linesQuery);
+        linesDocs.forEach((doc) => {
+           batch.delete(doc.ref);
+        });
+
         await batch.commit();
 
         dispatch( deleteTournamentById(tournament.id));
 
-    }
-}
-
-export const startNewTournamentAppointment = ({tournamentId, shift, discipline, category}) => {
-
-    return async (dispatch, getState ) => {
-
-        dispatch(setSaving());
-
-        const { uid } = getState().auth;
-        //const { active: tournament } = getState().tournament;
-
-        const newAppointment = {
-            uid: uid,
-            tournament: tournamentId,
-            shift: shift,
-            categort: category,
-            discipline: discipline, 
-            line: 0
-        };
-
-        const newDoc = doc( collection(FirebaseDB, 'appointments' ) )
-        await setDoc( newDoc, newAppointment );
-        newAppointment.id = newDoc.id;
-
-        //dispatch
-        dispatch ( addAppointment( newAppointment ) );
     }
 }
